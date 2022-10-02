@@ -31,6 +31,9 @@ local rs = game:GetService("RunService")
 local hb = rs.Heartbeat
 local stp = rs.Stepped
 local rstp = rs.RenderStepped
+local lastcf = hum.RootPart.CFrame
+hum.RootPart.CFrame = CFrame.new(0,10000,0)
+wait(.1)
 local hbt = {}
 local stpt = {}
 local rstpt = {}
@@ -399,7 +402,7 @@ table.foreach(acs,function(i,v)
 		print(b,b.Parent)
 	end)
 end)
-
+hum.RootPart.CFrame = lastcf
 hum.RootPart.Anchored=false
 
 local resetBindable = Instance.new("BindableEvent")
