@@ -31,6 +31,7 @@ local rs = game:GetService("RunService")
 local hb = rs.Heartbeat
 local stp = rs.Stepped
 local rstp = rs.RenderStepped
+local cf = char:GetPivot()
 local lastcf = hum.RootPart.CFrame
 hum.RootPart.CFrame = CFrame.new(0,10000,0)
 wait(.1)
@@ -124,7 +125,6 @@ if perma then
 	permadeath(anc)
 	wait(.1)
 end
-local cf = char:GetPivot()
 if r6 == false then
 	cf = char:FindFirstChild("HumanoidRootPart") or char:FindFirstChild("Torso") or char:FindFirstChild("UpperTorso")
 	cf = cf.CFrame
