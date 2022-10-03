@@ -595,7 +595,7 @@ end
 if flingable then
 	root:ClearAllChildren()
 	game:GetService'RunService'.Heartbeat:Connect(function()
-		root.Velocity = netvel
+		root.Velocity = Vector3.new(0,30.5,0)
 		task.wait(.5)
 	end)
 	rstep(function()
