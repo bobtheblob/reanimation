@@ -81,13 +81,13 @@ function permadeath(anchor)
 	hum.AutoRotate = false
 	hum.WalkSpeed = 0
 	hum.JumpPower = 0
-	if r6 == false and perma then
-		hum.PlatformStand = true
-	end
+	hum.PlatformStand = true
 	hb:Wait()
 	plr.Character = nil
 	plr.Character = char
+	hum.PlatformStand = true
 	wait(game:GetService("Players").RespawnTime+.2)
+	hum.PlatformStand = true
 	if anchor == true then
 		for i,v in pairs(clone:GetDescendants()) do
 			if v:IsA("BasePart") then
