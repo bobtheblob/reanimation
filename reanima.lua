@@ -61,6 +61,7 @@ elseif mode == 1 then
 	c.WidthScale = 1
 	clone = game:GetService("Players"):CreateHumanoidModelFromDescription(c,"R15")
 end
+local clonetors = clone:WaitForChild("Torso")
 local ctrs = clone:FindFirstChild("Torso")
 local semibot = reanimtype == ENUM.REANIMTYPES.HATALIGN_SEMIBOT_FLING and r6 and ctrs
 local cloneroot = clone.HumanoidRootPart
@@ -441,7 +442,15 @@ rstep(function()
 	end
 end)
 hbeat(function()
-	
+	for i,v in pairs(char:GetDescendants()) do
+		if v:IsA("BasePart") and (clonetors.Position-v.Position).Magnitude > 50 then
+			task.spawn(function()
+				v.CFrame = clonetors.CFrame
+				wait()
+				v.Velocity = Vector3.new(0,30.5,0)
+			end)
+		end
+	end
 	for i,v in pairs(clone:GetDescendants()) do
 		if v:IsA("BasePart") and v.Velocity.magnitude > 900 and v.Name ~="HumanoidRootPart" then
 			v.Velocity = Vector3.new()
