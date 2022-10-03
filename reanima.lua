@@ -214,7 +214,7 @@ step(function(a,b)
 			v.CanCollide = false
 		end
 	end
-	if frame < 30 then
+	if frame > 10 then
 		for i,v in pairs(clone:GetDescendants()) do
 			if v:IsA("BasePart") then
 				v.CanCollide = false
