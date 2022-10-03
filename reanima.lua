@@ -85,24 +85,9 @@ function permadeath(anchor)
 		hum.PlatformStand = true
 	end
 	hb:Wait()
-	local False = Instance.new("Model")
-	False.Parent = workspace
-	False.Name = " "
-	Instance.new("Part",False).Name = "Head"
-	Instance.new("Part",False).Name = "Torso"
-	local Human = Instance.new("Humanoid")
-	Human.Parent = False
-	plr.Character = False
-	Human.Name = "FalseHumanoid"
-	local noid = Human:Clone()
-	noid.Parent = False
-	noid.Name = "Humanoid"
-	Human:Destroy()
-	wait(5.65)
-	noid.Health = 0
+	plr.Character = nil
 	plr.Character = char
-	wait(5.65)
-	game:GetService("Debris"):AddItem(False,2)
+	wait(game:GetService("Players").RespawnTime+.2)
 	if anchor == true then
 		for i,v in pairs(clone:GetDescendants()) do
 			if v:IsA("BasePart") then
