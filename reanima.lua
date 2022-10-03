@@ -206,15 +206,19 @@ end
 function rstep(f)
 	table.insert(rstpt,f)
 end
+local frame = 0
 step(function(a,b)
+	frame = frame + 1
 	for i,v in pairs(char:GetDescendants()) do
 		if v:IsA("BasePart") then
 			v.CanCollide = false
 		end
 	end
-	for i,v in pairs(clone:GetDescendants()) do
-		if v:IsA("BasePart") then
-			v.CanCollide = false
+	if frame < 30 then
+		for i,v in pairs(clone:GetDescendants()) do
+			if v:IsA("BasePart") then
+				v.CanCollide = false
+			end
 		end
 	end
 	clonehum.Jump = hum.Jump
