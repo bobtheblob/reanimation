@@ -405,7 +405,11 @@ function raycast(ray,ign,tcac,iw)
 	return workspace:FindPartOnRayWithIgnoreList(ray,ig,tcac,iw)
 end
 local resetBindable = Instance.new("BindableEvent")
-clone:PivotTo(CFrame.new(lastpos.Position)*CFrame.new(0,30,0))
+if r6 == false then
+	clone:PivotTo(CFrame.new(lastpos.Position)*CFrame.new(0,30,0))
+else
+	clone:PivotTo(CFrame.new(lastpos.Position)*CFrame.new(0,10,0))
+end
 local rootpos
 rstep(function()
 	if cloneroot.Velocity.Y > .1 then
