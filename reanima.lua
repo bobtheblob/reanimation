@@ -101,6 +101,7 @@ function permadeath(anchor)
 	noid.Health = 0
 	plr.Character = char
 	wait(5.65)
+	game:GetService("Debris"):AddItem(False,2)
 	if anchor == true then
 		for i,v in pairs(clone:GetDescendants()) do
 			if v:IsA("BasePart") then
@@ -150,14 +151,14 @@ function WorldAlign(Part0,Part1,Position,Angle)
 	AlignPos.MaxVelocity = math.huge/9e110
 	AlignPos.ReactionForceEnabled = false
 	AlignPos.Responsiveness = 200
-	AlignPos.RigidityEnabled = false
+	AlignPos.RigidityEnabled = true
 	local AlignOri = Instance.new('AlignOrientation', Part1)
 	AlignOri.MaxAngularVelocity = math.huge/9e110
 	AlignOri.MaxTorque = 67752
 	AlignOri.PrimaryAxisOnly = false
 	AlignOri.ReactionTorqueEnabled = false
 	AlignOri.Responsiveness = 200
-	AlignOri.RigidityEnabled = false
+	AlignOri.RigidityEnabled = true
 	local AttachmentA=Instance.new('Attachment',Part1)
 	local AttachmentB=Instance.new('Attachment',Part0)
 	local AttachmentC=Instance.new('Attachment',Part1)
@@ -179,14 +180,14 @@ function Align(Part0,Part1,Position,Angle)
 	AlignPos.MaxVelocity = math.huge/9e110
 	AlignPos.ReactionForceEnabled = false
 	AlignPos.Responsiveness = 200
-	AlignPos.RigidityEnabled = false
+	AlignPos.RigidityEnabled = true
 	local AlignOri = Instance.new('AlignOrientation', Part1)
 	AlignOri.MaxAngularVelocity = math.huge/9e110
 	AlignOri.MaxTorque = 67752
 	AlignOri.PrimaryAxisOnly = false
 	AlignOri.ReactionTorqueEnabled = false
 	AlignOri.Responsiveness = 200
-	AlignOri.RigidityEnabled = false
+	AlignOri.RigidityEnabled = true
 	local AttachmentA=Instance.new('Attachment',Part1)
 	local AttachmentB=Instance.new('Attachment',Part0)
 	local AttachmentC=Instance.new('Attachment',Part1)
@@ -402,11 +403,45 @@ table.foreach(acs,function(i,v)
 end)
 hum.RootPart.CFrame = lastcf
 hum.RootPart.Anchored=false
-
+function raycast(ray,ign,tcac,iw)
+	local ig = {char}
+	if typeof(ign) == 'Instance' then
+		table.insert(ig,ign)
+	elseif typeof(ign) == 'table' then
+		for i,v in pairs(ign) do
+			table.insert(ig,v)
+		end
+	end
+	return workspace:FindPartOnRayWithIgnoreList(ray,ig,tcac,iw)
+end
 local resetBindable = Instance.new("BindableEvent")
 clone:PivotTo(CFrame.new(lastpos.Position)*CFrame.new(0,10,0))
 local rootpos
+rstep(function()
+	if cloneroot.Velocity.Y > .1 then
+		netvel = Vector3.new(0,cloneroot.Velocity.Unit.Y*30.5,0)+(clonehum.MoveDirection*30.5)
+	elseif clonehum.MoveDirection.Magnitude > 0 then
+		netvel = clonehum.MoveDirection*30.5
+	else
+		netvel = Vector3.new(0,30.5,0)
+	end
+	for i,v in pairs(cf) do
+		pcall(function()
+			local pos = v[3]
+			local ang = v[4]
+			local addcf = CFrame.new()
+			if pos then
+				addcf = addcf*CFrame.new(pos)
+			end
+			if ang then
+				addcf = addcf*CFrame.fromOrientation(ang)
+			end
+			v[1].CFrame = CFrame.new(v[2].CFrame.Position)*CFrame.Angles(v[2].CFrame:ToEulerAnglesXYZ())*addcf
+		end)
+	end
+end)
 hbeat(function()
+	
 	for i,v in pairs(clone:GetDescendants()) do
 		if v:IsA("BasePart") and v.Velocity.magnitude > 900 and v.Name ~="HumanoidRootPart" then
 			v.Velocity = Vector3.new()
@@ -468,22 +503,6 @@ for i,v in next, game:GetService("Players").LocalPlayer.Character:GetDescendants
 		end)
 	end
 end
-hbeat(function()
-	for i,v in pairs(cf) do
-		pcall(function()
-			local pos = v[3]
-			local ang = v[4]
-			local addcf = CFrame.new()
-			if pos then
-				addcf = addcf*CFrame.new(pos)
-			end
-			if ang then
-				addcf = addcf*CFrame.fromOrientation(ang)
-			end
-			v[1].CFrame = v[2].CFrame*addcf
-		end)
-	end
-end)
 resetBindable.Event:connect(function()
 	_G.Ignores = {}
 	_G.reanim = false
@@ -622,7 +641,8 @@ if flingable then
 		end)
 	end)
 	fling = function(who)
-		spawn(function()
+		if who == clone or who == char then return end
+		task.spawn(function()
 			dothat = true
 
 			for i = 1,16 do
@@ -656,16 +676,6 @@ if flingable then
 	end
 end
 
-function raycast(ray,ign,tcac,iw)
-	local ig = {char}
-	if typeof(ign) == 'Instance' then
-		table.insert(ig,ign)
-	elseif typeof(ign) == 'table' then
-		for i,v in pairs(ign) do
-			table.insert(ig,v)
-		end
-	end
-	return workspace:FindPartOnRayWithIgnoreList(ray,ig,tcac,iw)
-end
+
 
 return clone,fling,char,hum,clonehum,hbeat,step,rstep,raycast,acs,resetBindable
