@@ -9,7 +9,8 @@ getgenv().reanimating = true
 local animate = loadstring(game:HttpGet'https://raw.githubusercontent.com/bobtheblob/reanimation/main/extensions/animate_r6.lua')
 local setting = getgenv().reanim_settings or {
 	ispermadeath = true,
-	power = Vector3.new(0,30,0)
+	power = Vector3.new(0,30,0),
+	positiontype = "align"
 }
 local infvec3 = Vector3.one*math.huge
 local rs = game:GetService("RunService")
@@ -103,7 +104,7 @@ if setting.ispermadeath then
 		end
 	end
 else
-	flingpart = char:FindFirstChild("Torso") or char:FindFirstChild("Left Arm")
+	flingpart = char:FindFirstChild("Left Arm")
 	hum.RootPart.Anchored = false
 end
 --
@@ -148,19 +149,21 @@ function ispermadeath()
 end
 --
 function networksetup(p0,p1)
-	--[[local a0,a1 = Instance.new("Attachment"),Instance.new("Attachment")
-	local alignpos,alignori = Instance.new("AlignPosition"),Instance.new("AlignOrientation")
-	alignpos.Attachment0 = a0
-	alignpos.Attachment1 = a1
-	alignori.Attachment0 = a0
-	alignori.Attachment1 = a1
-	alignpos.Responsiveness = 2000
-	alignori.Responsiveness = 2000
-	alignpos.MaxForce = 1e9
-	alignori.MaxTorque = 1e9
-	a0.Parent = p0
-	a1.Parent = p1
-	alignpos.Parent,alignori.Parent = p1,p1]]
+	if setting.positiontype == "align" then
+		local a0,a1 = Instance.new("Attachment"),Instance.new("Attachment")
+		local alignpos,alignori = Instance.new("AlignPosition"),Instance.new("AlignOrientation")
+		alignpos.Attachment0 = a0
+		alignpos.Attachment1 = a1
+		alignori.Attachment0 = a0
+		alignori.Attachment1 = a1
+		alignpos.Responsiveness = 2000
+		alignori.Responsiveness = 2000
+		alignpos.MaxForce = 1e9
+		alignori.MaxTorque = 1e9
+		a0.Parent = p0
+		a1.Parent = p1
+		alignpos.Parent,alignori.Parent = p1,p1
+	end
 	p0.CustomPhysicalProperties = PhysicalProperties.new(math.huge,math.huge,math.huge,math.huge,math.huge)
 end
 function align(p0 : Part,p1 : Part)
@@ -173,7 +176,9 @@ function align(p0 : Part,p1 : Part)
 		if giveme[p0] then
 			cf = giveme[p0]
 		end
-		p0.CFrame = p1.CFrame*cf
+		if setting.positiontype == "cframe" then
+			p0.CFrame = p1.CFrame*cf
+		end
 	end
 end
 --
@@ -357,6 +362,21 @@ power.Parent = flingpart
 power.MaxTorque = infvec3
 power.P = math.huge
 power.AngularVelocity = Vector3.one*2000000
+local bp
+if setting.positiontype == "align" then
+	flingpart:ClearAllChildren()
+	bp = Instance.new("BodyPosition")
+	bp.Position = flingpart.Position
+	bp.MaxForce = infvec3
+	bp.P = 25000
+	bp.D = 200
+	bp.Parent = flingpart
+	connections[#connections+1] = rs.Heartbeat:Connect(function()
+		if not flingpart:GetAttribute("DontAlign") then
+			bp.Position = rigroot.Position
+		end
+	end)
+end
 function fling(p,dur)
 	if isdead() then return end
 	dafling = dafling + 1
@@ -390,6 +410,9 @@ function fling(p,dur)
 			flingpart.CFrame = CFrame.new(p)
 		elseif typeof(p) == 'CFrame' then
 			flingpart.CFrame = p
+		end
+		if bp then
+			bp.Position = flingpart.Position
 		end
 		--flingpart.CFrame = flingpart.CFrame * CFrame.Angles(math.random(-360,360),math.random(-360,360),math.random(-360,360))
 	end
