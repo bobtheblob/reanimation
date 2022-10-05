@@ -366,6 +366,19 @@ function fling(p,dur)
 		flingpart:SetAttribute("DontAlign",nil)
 	end
 end
+--
+function raycast(ray,ign,tcac,iw)
+	local ig = {char}
+	if typeof(ign) == 'Instance' then
+		table.insert(ig,ign)
+	elseif typeof(ign) == 'table' then
+		for i,v in pairs(ign) do
+			table.insert(ig,v)
+		end
+	end
+	return workspace:FindPartOnRayWithIgnoreList(ray,ig,tcac,iw)
+end
+--
 rig.Parent = workspace
 getgenv().REANIMATE_Figure = rig
 local fake = Instance.new("LocalScript")
