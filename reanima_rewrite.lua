@@ -224,6 +224,22 @@ if rig.PrimaryPart ~= rigroot then
 	end
 end
 connections[#connections+1] = rs.Heartbeat:Connect(function()
+	local posy = rigroot.Position.Y
+	if posy < workspace.FallenPartsDestroyHeight/2) then
+		for i,v in pairs(rig:children()) do
+			if v:IsA("BasePart") then
+				v.Velocity = Vector3.new()
+				v.RotVelocity = Vector3.new()
+			end
+		end
+		rig:PivotTo(pos)
+		for i,v in pairs(rig:children()) do
+			if v:IsA("BasePart") then
+				v.Velocity = Vector3.new()
+				v.RotVelocity = Vector3.new()
+			end
+		end
+	end
 	for i,v in pairs(alignparts) do
 		if addedaparts[i] == nil then
 			addedaparts[i] = true
