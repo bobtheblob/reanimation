@@ -164,11 +164,11 @@ function networksetup(p0,p1)
 	p0.CustomPhysicalProperties = PhysicalProperties.new(math.huge,math.huge,math.huge,math.huge,math.huge)
 end
 function align(p0 : Part,p1 : Part)
-	p0:ApplyImpulse(netvel)
-	p0:ApplyAngularImpulse(Vector3.new())
-	p0.AssemblyLinearVelocity = netvel
-	p0.AssemblyAngularVelocity = Vector3.new()
 	if p0:GetAttribute("DontAlign") == nil then
+		p0:ApplyImpulse(netvel)
+		p0:ApplyAngularImpulse(Vector3.new())
+		p0.AssemblyLinearVelocity = netvel
+		p0.AssemblyAngularVelocity = Vector3.new()
 		local cf = CFrame.new()
 		if giveme[p0] then
 			cf = giveme[p0]
@@ -363,7 +363,8 @@ function fling(p,dur)
 	flingpart:SetAttribute("DontAlign",true)
 	for i = 1,dur or 40 do
 		rs.Heartbeat:Wait()
-		flingpart:ApplyImpulse(Vector3.new(0,50,0))
+		flingpart:ApplyImpulse(setting.power)
+		flingpart:ApplyAngularImpulse(Vector3.new())
 		if typeof(p) == 'Instance' then
 			if p:IsA("BasePart") then
 				flingpart.CFrame = p.CFrame
