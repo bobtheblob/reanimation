@@ -176,10 +176,14 @@ connections[#connections+1] = rs.RenderStepped:Connect(function()
 	end
 end)
 connections[#connections+1] = rs.Stepped:Connect(function()
-	for i,v in pairs(rig:GetDescendants()) do
+	for i,v in pairs(rig:children()) do
 		if v:isA("BasePart") then
 			v.CanCollide = false
 			v.Transparency = .7
+		end
+		if v:isA("Accessory") and v:FindFirstChild("Handle")then
+			v:FindFirstChild("Handle").CanCollide = false
+			v:FindFirstChild("Handle").Transparency = .7
 		end
 	end
 	for i,v in pairs(char:GetDescendants()) do
