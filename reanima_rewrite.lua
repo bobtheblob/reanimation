@@ -162,6 +162,8 @@ function networksetup(p0,p1)
 		alignori.MaxTorque = 1e9
 		a0.Parent = p0
 		a1.Parent = p1
+		a0.Name = "PART0_"..p1.Name
+		a1.Name = "PART1_"..p0.Name
 		alignpos.Parent,alignori.Parent = p1,p1
 	end
 	p0.CustomPhysicalProperties = PhysicalProperties.new(math.huge,math.huge,math.huge,math.huge,math.huge)
@@ -178,6 +180,9 @@ function align(p0 : Part,p1 : Part)
 		end
 		if setting.positiontype == "cframe" then
 			p0.CFrame = p1.CFrame*cf
+		elseif setting.positiontype == "align" then
+			local o = p0:FindFirstChild("PART0_"..p1.Name)
+			o.CFrame = cf
 		end
 	end
 end
