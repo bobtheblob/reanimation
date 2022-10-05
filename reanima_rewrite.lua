@@ -4,11 +4,12 @@ setsimulationradius = setsimulationradius or function(a,b)
 	sethiddenproperty(game:GetService("Players").LocalPlayer,"SimulationRadius",a)
 	sethiddenproperty(game:GetService("Players").LocalPlayer,"MaximumSimulationRadius",b)
 end
-if getgenv().reanimating then return end
+if getgenv().reanimating then error'you are reanimating' end
 getgenv().reanimating = true
 local animate = loadstring(game:HttpGet'https://raw.githubusercontent.com/bobtheblob/reanimation/main/extensions/animate_r6.lua')
 local setting = getgenv().reanim_settings or {
-	ispermadeath = true
+	ispermadeath = true,
+	power = Vector3.new(0,30,0)
 }
 local infvec3 = Vector3.one*math.huge
 local rs = game:GetService("RunService")
@@ -163,11 +164,11 @@ function networksetup(p0,p1)
 	p0.CustomPhysicalProperties = PhysicalProperties.new(math.huge,math.huge,math.huge,math.huge,math.huge)
 end
 function align(p0 : Part,p1 : Part)
+	p0:ApplyImpulse(netvel)
+	p0:ApplyAngularImpulse(Vector3.new())
+	p0.AssemblyLinearVelocity = netvel
+	p0.AssemblyAngularVelocity = Vector3.new()
 	if p0:GetAttribute("DontAlign") == nil then
-		p0:ApplyImpulse(netvel)
-		p0:ApplyAngularImpulse(Vector3.new())
-		p0.AssemblyLinearVelocity = netvel
-		p0.AssemblyAngularVelocity = Vector3.new()
 		local cf = CFrame.new()
 		if giveme[p0] then
 			cf = giveme[p0]
@@ -178,9 +179,9 @@ end
 --
 connections[#connections+1] = rs.RenderStepped:Connect(function()
 	if hum.MoveDirection.Magnitude > 0 then
-		netvel = (hum.MoveDirection*500)+Vector3.new(0,50,0)
+		netvel = (hum.MoveDirection*500)+setting.power
 	else
-		netvel = Vector3.new(0,50,0)
+		netvel = setting.power
 	end
 	if setting.ispermadeath then
 		righum:Move(hum.MoveDirection,false)
@@ -188,10 +189,14 @@ connections[#connections+1] = rs.RenderStepped:Connect(function()
 	end
 end)
 connections[#connections+1] = rs.Stepped:Connect(function()
-	for i,v in pairs(rig:GetDescendants()) do
+	for i,v in pairs(rig:children()) do
 		if v:isA("BasePart") then
 			v.CanCollide = false
 			v.Transparency = .7
+		end
+		if v:isA("Accessory") and v:FindFirstChild("Handle") then
+			v:FindFirstChild("Handle").CanCollide = false
+			v:FindFirstChild("Handle").Transparency = .7
 		end
 	end
 	for i,v in pairs(char:GetDescendants()) do
@@ -351,7 +356,7 @@ local power = Instance.new("BodyAngularVelocity")
 power.Parent = flingpart
 power.MaxTorque = infvec3
 power.P = math.huge
-power.AngularVelocity = Vector3.one*math.huge
+power.AngularVelocity = Vector3.one*2000000
 function fling(p,dur)
 	if isdead() then return end
 	dafling = dafling + 1
@@ -359,7 +364,6 @@ function fling(p,dur)
 	for i = 1,dur or 40 do
 		rs.Heartbeat:Wait()
 		flingpart:ApplyImpulse(Vector3.new(0,50,0))
-		flingpart:ApplyAngularImpulse(Vector3.new(15,15,15))
 		if typeof(p) == 'Instance' then
 			if p:IsA("BasePart") then
 				flingpart.CFrame = p.CFrame
@@ -378,7 +382,7 @@ function fling(p,dur)
 					else
 						flingpart.CFrame = root.CFrame
 					end
-					
+
 				end
 			end
 		elseif typeof(p) == 'Vector3' then
@@ -386,7 +390,7 @@ function fling(p,dur)
 		elseif typeof(p) == 'CFrame' then
 			flingpart.CFrame = p
 		end
-		
+		--flingpart.CFrame = flingpart.CFrame * CFrame.Angles(math.random(-360,360),math.random(-360,360),math.random(-360,360))
 	end
 	dafling = dafling - 1
 	if dafling <= 0 then
