@@ -166,9 +166,9 @@ end
 --
 connections[#connections+1] = rs.RenderStepped:Connect(function()
 	if hum.MoveDirection.Magnitude > 0 then
-		netvel = (hum.MoveDirection*500)+Vector3.new(0,50,0)
+		netvel = (hum.MoveDirection*500)+Vector3.new(0,50,0)+(rigroot.Velocity/2)
 	else
-		netvel = Vector3.new(0,50,0)
+		netvel = Vector3.new(0,50,0)+(rigroot.Velocity/2)
 	end
 	if setting.ispermadeath then
 		righum:Move(hum.MoveDirection,false)
