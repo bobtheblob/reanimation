@@ -400,5 +400,6 @@ return {
 	['netcheck'] = netcheck,
 	['alignparts'] = alignparts,
 	['resetevent'] = resetBindable,
-	['raycast'] = raycast
+	['raycast'] = raycast,
+	['alignoffset'] = giveme
 }
