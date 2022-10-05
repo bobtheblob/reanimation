@@ -538,4 +538,4 @@ return function(script)
 		end
 	end)
 
-end)
+end
