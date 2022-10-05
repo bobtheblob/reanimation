@@ -532,7 +532,7 @@ return function(script)
 	pose = "Standing"
 
 	task.spawn(function()
-		while script.Parent == Figure  do
+		while script.Parent == Figure and script.Disabled == false do
 			local _, time = wait(0.1)
 			move(time)
 		end
