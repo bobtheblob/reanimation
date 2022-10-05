@@ -379,48 +379,50 @@ if setting.positiontype == "align" then
 end
 function fling(p,dur)
 	if isdead() then return end
-	dafling = dafling + 1
-	flingpart:SetAttribute("DontAlign",true)
-	for i = 1,dur or 40 do
-		rs.Heartbeat:Wait()
-		flingpart:ApplyImpulse(setting.power)
-		flingpart:ApplyAngularImpulse(Vector3.new())
-		if typeof(p) == 'Instance' then
-			if p:IsA("BasePart") then
-				flingpart.CFrame = p.CFrame
-			elseif p:IsA("Humanoid") then
-				local root = p.Parent:FindFirstChild("Torso") or p.Parent:FindFirstChild("UpperTorso") or p.Parent:FindFirstChild("Head") or p.RootPart
-				if root then
-					if root.Velocity.Magnitude < 28 then
-						local x,y,z = 0,0,0
-						x = root.Position.X
-						y = root.Position.Y
-						z = root.Position.Z
-						x = x + root.Velocity.X / 2
-						y = y + root.Velocity.Y / 2
-						z = z + root.Velocity.Z / 2
-						flingpart.CFrame = CFrame.new(Vector3.new(x,y,z))
-					else
-						flingpart.CFrame = root.CFrame
-					end
+	task.spawn(function()
+		dafling = dafling + 1
+		flingpart:SetAttribute("DontAlign",true)
+		for i = 1,dur or 40 do
+			rs.Heartbeat:Wait()
+			flingpart:ApplyImpulse(setting.power)
+			flingpart:ApplyAngularImpulse(Vector3.new())
+			if typeof(p) == 'Instance' then
+				if p:IsA("BasePart") then
+					flingpart.CFrame = p.CFrame
+				elseif p:IsA("Humanoid") then
+					local root = p.Parent:FindFirstChild("Torso") or p.Parent:FindFirstChild("UpperTorso") or p.Parent:FindFirstChild("Head") or p.RootPart
+					if root then
+						if root.Velocity.Magnitude < 28 then
+							local x,y,z = 0,0,0
+							x = root.Position.X
+							y = root.Position.Y
+							z = root.Position.Z
+							x = x + root.Velocity.X / 2
+							y = y + root.Velocity.Y / 2
+							z = z + root.Velocity.Z / 2
+							flingpart.CFrame = CFrame.new(Vector3.new(x,y,z))
+						else
+							flingpart.CFrame = root.CFrame
+						end
 
+					end
 				end
+			elseif typeof(p) == 'Vector3' then
+				flingpart.CFrame = CFrame.new(p)
+			elseif typeof(p) == 'CFrame' then
+				flingpart.CFrame = p
 			end
-		elseif typeof(p) == 'Vector3' then
-			flingpart.CFrame = CFrame.new(p)
-		elseif typeof(p) == 'CFrame' then
-			flingpart.CFrame = p
+			if bp then
+				bp.Position = flingpart.Position
+			end
+			--flingpart.CFrame = flingpart.CFrame * CFrame.Angles(math.random(-360,360),math.random(-360,360),math.random(-360,360))
 		end
-		if bp then
-			bp.Position = flingpart.Position
+		dafling = dafling - 1
+		if dafling <= 0 then
+			dafling = 0
+			flingpart:SetAttribute("DontAlign",nil)
 		end
-		--flingpart.CFrame = flingpart.CFrame * CFrame.Angles(math.random(-360,360),math.random(-360,360),math.random(-360,360))
-	end
-	dafling = dafling - 1
-	if dafling <= 0 then
-		dafling = 0
-		flingpart:SetAttribute("DontAlign",nil)
-	end
+	end)
 end
 rig.Parent = workspace
 getgenv().REANIMATE_Figure = rig
