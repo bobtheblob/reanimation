@@ -266,7 +266,7 @@ connections[#connections+1] = rs.Heartbeat:Connect(function()
 	for i,v in pairs(alignparts) do
 		if addedaparts[i] == nil then
 			addedaparts[i] = true
-			networksetup(i)
+			networksetup(i,v)
 			align(i,v)
 		elseif (i:IsDescendantOf(workspace) == false or v:IsDescendantOf(workspace)  == false) and addedaparts[i] then
 			addedaparts[i] = nil
