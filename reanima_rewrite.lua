@@ -178,9 +178,9 @@ function align(p0 : Part,p1 : Part)
 			p0.AssemblyLinearVelocity = netvel
 			p0.AssemblyAngularVelocity = Vector3.new()
 		else
-			p0:ApplyImpulse(setting.static+Vector3.new(0,10,0))
+			p0:ApplyImpulse(netvel+Vector3.new(0,10,0))
 			p0:ApplyAngularImpulse(Vector3.new())
-			p0.AssemblyLinearVelocity = setting.static+Vector3.new(0,10,0)
+			p0.AssemblyLinearVelocity = netvel+Vector3.new(0,10,0)
 			p0.AssemblyAngularVelocity = Vector3.new()
 		end
 		local cf = CFrame.new()
