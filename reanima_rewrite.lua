@@ -10,7 +10,8 @@ local animate = loadstring(game:HttpGet'https://raw.githubusercontent.com/bobthe
 local setting = getgenv().reanim_settings or {
 	ispermadeath = true,
 	power = Vector3.new(0,30,0),
-	positiontype = "align"
+	positiontype = "cframe",
+	mdirpower = 100
 }
 local infvec3 = Vector3.one*math.huge
 local rs = game:GetService("RunService")
@@ -189,7 +190,7 @@ end
 --
 connections[#connections+1] = rs.RenderStepped:Connect(function()
 	if hum.MoveDirection.Magnitude > 0 then
-		netvel = (hum.MoveDirection*500)+setting.power
+		netvel = (hum.MoveDirection*setting.mdirpower)+setting.power
 	else
 		netvel = setting.power
 	end
