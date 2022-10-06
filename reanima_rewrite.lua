@@ -171,10 +171,17 @@ function networksetup(p0,p1)
 end
 function align(p0 : Part,p1 : Part)
 	if p0:GetAttribute("DontAlign") == nil then
-		p0:ApplyImpulse(netvel)
-		p0:ApplyAngularImpulse(Vector3.new())
-		p0.AssemblyLinearVelocity = netvel
-		p0.AssemblyAngularVelocity = Vector3.new()
+		if getnet then
+			p0:ApplyImpulse(netvel)
+			p0:ApplyAngularImpulse(Vector3.new())
+			p0.AssemblyLinearVelocity = netvel
+			p0.AssemblyAngularVelocity = Vector3.new()
+		else
+			p0:ApplyImpulse(netvel+Vector3.new(0,10,0))
+			p0:ApplyAngularImpulse(Vector3.new())
+			p0.AssemblyLinearVelocity = netvel+Vector3.new(0,10,0)
+			p0.AssemblyAngularVelocity = Vector3.new()
+		end
 		local cf = CFrame.new()
 		if giveme[p0] then
 			cf = giveme[p0]
