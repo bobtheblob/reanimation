@@ -1,5 +1,4 @@
-return function(script)
-	local Figure = script.Parent
+local Figure = getgenv().REANIMATE_Figure
 	local Torso = Figure:WaitForChild("Torso")
 	local RightShoulder = Torso:WaitForChild("Right Shoulder")
 	local LeftShoulder = Torso:WaitForChild("Left Shoulder")
@@ -532,10 +531,8 @@ return function(script)
 	pose = "Standing"
 
 	task.spawn(function()
-		while script.Parent == Figure and script.Disabled == false do
+		while Figure.Parent ~= nil do
 			local _, time = wait(0.1)
 			move(time)
 		end
 	end)
-
-end
